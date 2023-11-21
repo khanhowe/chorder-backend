@@ -5,7 +5,7 @@ const chordAnalysisService = new ChordAnalysisService();
 
 export const analyzeNotes = (req: Request, res: Response) => {
     const notes = req.body.notes;
-    const analysisResult = chordAnalysisService.analyzeNotes(notes);
+    const analysisResult = chordAnalysisService.calculateChordType(notes);
 
     res.json(analysisResult);
 }
