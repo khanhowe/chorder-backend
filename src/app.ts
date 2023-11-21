@@ -1,12 +1,12 @@
-import express, { Request, Response } from 'express';
+import express, { Express } from 'express';
+import userRoutes from './routes/userRoutes';
+import chordRoutes from './routes/chordRoutes';
 
-const app = express();
-const port = 3000;
+const app: Express = express();
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, Chorder!');
-});
+app.use(express.json());
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+app.use('/users', userRoutes);
+app.use('/chords', chordRoutes )
+
+export default app;
