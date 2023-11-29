@@ -14,7 +14,6 @@ import { SongsModule } from './songs/songs.module';
             validationSchema: configValidationSchema,
             isGlobal: true,
         }),
-        AuthModule,
         ChordsModule,
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -30,6 +29,7 @@ import { SongsModule } from './songs/songs.module';
             }),
             inject: [ConfigService],
         }),
+        AuthModule,
         ProgressionsModule,
         SongsModule,
     ],
