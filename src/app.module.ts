@@ -33,7 +33,5 @@ import { SongsModule } from './songs/songs.module';
         ProgressionsModule,
         SongsModule,
     ],
-    controllers: [],
-    providers: [],
 })
 export class AppModule {}
