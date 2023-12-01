@@ -9,6 +9,9 @@ import { User } from '../../auth/user.entity';
 import { mockCMajorTriadChord } from './mocks/chords.mock';
 import { seedUsers } from '../../database/seeds/user.seeder';
 import { CreateChordDto } from '../dto/create-chord.dto';
+import { seedChord } from '../../database/seeds/chord.seeder';
+import { v4 } from 'uuid';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ChordsRepository', () => {
     let chordsRepository: ChordsRepository;
@@ -42,7 +45,7 @@ describe('ChordsRepository', () => {
     });
 
     describe('createChord()', () => {
-        it('Succefully create a chord and save it to the database', async () => {
+        it('Should succefully create a chord and save it to the database', async () => {
             const createChordDto: CreateChordDto = {
                 name: 'C Major Triad',
                 description: 'A C major triad',
@@ -53,6 +56,34 @@ describe('ChordsRepository', () => {
                 user,
             );
             expect(savedChord).toMatchObject(mockCMajorTriadChord);
+        });
+
+        it('Should throw an error if required fields of dto are missing', async () => {
+            const invalidDto = { name: 'Incomplete chord object' };
+            await expect(
+                // @ts-expect-error: Passing an invalid dto for error testing.
+                chordsRepository.createChord(invalidDto, user),
+            ).rejects.toThrow();
+        });
+    });
+
+    describe('getChordById()', () => {
+        it('Should successfully get a pre-existing chord from the database', async () => {
+            const existingChord = await seedChord(queryRunner.manager, {
+                user,
+            });
+
+            const foundChord = await chordsRepository.getChordById(
+                existingChord.id,
+                user,
+            );
+            expect(foundChord.name).toEqual(existingChord.name);
+        });
+
+        it('Should fail to find chord and return NotFoundException', async () => {
+            await expect(
+                chordsRepository.getChordById(v4(), user),
+            ).rejects.toThrow(NotFoundException);
         });
     });
 });

@@ -1,23 +1,20 @@
-import { DataSource } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { Chord } from '../../chords/chord.entity';
 
-export const seedUsers = async (
-    dataSource: DataSource,
-    overrides?: Partial<Chord>,
-): Promise<void> => {
-    const chordsRepository = dataSource.getRepository(Chord);
-
-    const defaultValues: Partial<Chord> = {
+export const seedChord = async (
+    manager: EntityManager,
+    overrides?: Omit<Partial<Chord>, 'id'>,
+): Promise<Chord> => {
+    const defaultValues: Omit<Partial<Chord>, 'id'> = {
         name: 'C Major',
         description: 'A C major triad',
         notes: 'C4:E4:G4',
     };
 
-    const chordProperties: Partial<Chord> = {
+    const newChord = manager.create(Chord, {
         ...defaultValues,
         ...overrides,
-    };
-
-    const user = chordsRepository.create(chordProperties);
-    await chordsRepository.save(user);
+    });
+    await manager.save(newChord);
+    return newChord;
 };
