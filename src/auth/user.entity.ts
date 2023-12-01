@@ -1,5 +1,8 @@
 import { Chord } from '../chords/chord.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Progression } from '../progressions/progression.entity';
+import { Song } from '../songs/song.entity';
+import { Exclude } from 'class-transformer';
 
 /* eslint-disable indent */
 @Entity()
@@ -11,14 +14,17 @@ export class User {
     username: string;
 
     @Column()
+    @Exclude({ toPlainOnly: true })
     password: string;
 
-    @OneToMany(() => Chord, (chord) => chord.user, { eager: true })
+    @OneToMany(() => Chord, (chord) => chord.user, { eager: false })
     chords: Chord[];
 
-    @OneToMany(() => Chord, (progression) => progression.user, { eager: true })
-    progressions: Chord[];
+    @OneToMany(() => Progression, (progression) => progression.user, {
+        eager: false,
+    })
+    progressions: Progression[];
 
-    @OneToMany(() => Chord, (song) => song.user, { eager: true })
-    songs: Chord[];
+    @OneToMany(() => Song, (song) => song.user, { eager: false })
+    songs: Song[];
 }

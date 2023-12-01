@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Progression } from '../progressions/progression.entity';
 import { User } from '../auth/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Chord {
@@ -28,5 +29,6 @@ export class Chord {
     progressions: Progression[];
 
     @ManyToOne(() => User, (user) => user.chords, { eager: false })
+    @Exclude({ toPlainOnly: true })
     user: User;
 }

@@ -1,5 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Chord } from '../chords/chord.entity';
+import { Exclude } from 'class-transformer';
+import { User } from '../auth/user.entity';
 
 @Entity()
 export class Progression {
@@ -11,4 +13,8 @@ export class Progression {
 
     @ManyToOne(() => Chord)
     chords: Chord[];
+
+    @ManyToOne(() => User, (user) => user.progressions, { eager: false })
+    @Exclude({ toPlainOnly: true })
+    user: User;
 }
