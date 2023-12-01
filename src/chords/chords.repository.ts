@@ -6,7 +6,7 @@ import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class ChordsRepository {
-    private logger = new Logger();
+    private logger = new Logger('ChordsRepository');
 
     constructor(private entityManager: EntityManager) {}
 
@@ -14,6 +14,7 @@ export class ChordsRepository {
         createChordDto: CreateChordDto,
         user: User,
     ): Promise<Chord> {
+        this.logger.log(`Creating chord: ${JSON.stringify(createChordDto)}`);
         const { name, description, notes } = createChordDto;
         const chord = this.entityManager.create(Chord, {
             name,
