@@ -1,12 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { ChordsRepository } from '../chords.repository';
 import { DatabaseModule } from '../../database/database.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Chord } from '../chord.entity';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Progression } from '../../progressions/progression.entity';
 import { User } from '../../auth/user.entity';
-import { CreateChordDto } from '../dto/create-chord.dto';
+import { mockUser } from '../../auth/test/mocks/user.mock';
+import { mockCMajorTriadChord } from './mocks/chords.mock';
 
 describe('ChordsRepository', () => {
     let chordsRepository: ChordsRepository;
@@ -21,6 +22,13 @@ describe('ChordsRepository', () => {
             providers: [ChordsRepository],
         }).compile();
 
+        const usersRepository = module.get<Repository<User>>(
+            getRepositoryToken(User),
+        );
+
+        const testUser = usersRepository.create(mockUser);
+        await usersRepository.save(testUser);
+
         chordsRepository = module.get<ChordsRepository>(ChordsRepository);
         dataSource = module.get<DataSource>(DataSource);
     });
@@ -31,15 +39,14 @@ describe('ChordsRepository', () => {
         );
     });
 
-    describe('getChord()', () => {
+    describe('createChord()', () => {
         it('Succefully create a chord and save it to the database', async () => {
-            const input: CreateChordDto = {
-                name: 'test',
-                description: 'testDescription',
-                notes: 'test:test:test',
-            };
-            const savedChord = await chordsRepository.createChord(input);
-            expect(savedChord).toMatchObject(input);
+            mockCMajorTriadChord.user = mockUser;
+            const savedChord = await chordsRepository.createChord(
+                mockCMajorTriadChord,
+                mockUser,
+            );
+            expect(savedChord).toMatchObject(mockCMajorTriadChord);
         });
     });
 });

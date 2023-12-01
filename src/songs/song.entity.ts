@@ -9,7 +9,7 @@ import { Progression } from '../progressions/progression.entity';
 
 @Entity()
 export class Song {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: number;
 
     @Column()

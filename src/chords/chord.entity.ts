@@ -11,8 +11,8 @@ import { User } from '../auth/user.entity';
 
 @Entity()
 export class Chord {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column()
     name: string;

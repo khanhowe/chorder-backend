@@ -3,6 +3,7 @@ import { Chord } from './chord.entity';
 import { ChordsService } from './chords.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateChordDto } from './dto/create-chord.dto';
+import { User } from 'src/auth/user.entity';
 
 @Controller('chords')
 @UseGuards(AuthGuard())
@@ -11,8 +12,11 @@ export class ChordsController {
     constructor(private chordsService: ChordsService) {}
 
     @Post()
-    createChord(@Body() createChordDto: CreateChordDto): Promise<Chord> {
+    createChord(
+        @Body() createChordDto: CreateChordDto,
+        user: User,
+    ): Promise<Chord> {
         this.logger.log(`Creating new chord`);
-        return this.chordsService.createChord(createChordDto);
+        return this.chordsService.createChord(createChordDto, user);
     }
 }

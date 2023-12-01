@@ -3,7 +3,7 @@ import { Chord } from '../chords/chord.entity';
 
 @Entity()
 export class Progression {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
