@@ -1,17 +1,20 @@
 import { Test } from '@nestjs/testing';
 import { ChordsRepository } from '../chords.repository';
 import { DatabaseModule } from '../../database/database.module';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Chord } from '../chord.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { Progression } from '../../progressions/progression.entity';
 import { User } from '../../auth/user.entity';
-import { mockUser } from '../../auth/test/mocks/user.mock';
 import { mockCMajorTriadChord } from './mocks/chords.mock';
+import { seedUsers } from '../../database/seeds/user.seeder';
+import { CreateChordDto } from '../dto/create-chord.dto';
 
 describe('ChordsRepository', () => {
     let chordsRepository: ChordsRepository;
     let dataSource: DataSource;
+    let user: User;
+    let queryRunner: QueryRunner;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -22,29 +25,32 @@ describe('ChordsRepository', () => {
             providers: [ChordsRepository],
         }).compile();
 
-        const usersRepository = module.get<Repository<User>>(
-            getRepositoryToken(User),
-        );
-
-        const testUser = usersRepository.create(mockUser);
-        await usersRepository.save(testUser);
-
-        chordsRepository = module.get<ChordsRepository>(ChordsRepository);
         dataSource = module.get<DataSource>(DataSource);
+
+        queryRunner = dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        user = await seedUsers(queryRunner.manager);
+        chordsRepository = new ChordsRepository(queryRunner.manager);
     });
 
     afterEach(async () => {
-        await dataSource.query(
-            'TRUNCATE TABLE chord RESTART IDENTITY CASCADE;',
-        );
+        await queryRunner.rollbackTransaction();
+        await queryRunner.release();
+        await dataSource.destroy();
     });
 
     describe('createChord()', () => {
         it('Succefully create a chord and save it to the database', async () => {
-            mockCMajorTriadChord.user = mockUser;
+            const createChordDto: CreateChordDto = {
+                name: 'C Major Triad',
+                description: 'A C major triad',
+                notes: 'C4:E4:G4',
+            };
             const savedChord = await chordsRepository.createChord(
-                mockCMajorTriadChord,
-                mockUser,
+                createChordDto,
+                user,
             );
             expect(savedChord).toMatchObject(mockCMajorTriadChord);
         });

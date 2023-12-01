@@ -1,36 +1,33 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { DataSource, EntityTarget, Repository } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { Chord } from './chord.entity';
-import { InjectDataSource } from '@nestjs/typeorm';
 import { CreateChordDto } from './dto/create-chord.dto';
 import { User } from 'src/auth/user.entity';
 
 @Injectable()
-export class ChordsRepository extends Repository<Chord> {
+export class ChordsRepository {
     private logger = new Logger();
 
-    constructor(@InjectDataSource() dataSource: DataSource) {
-        super(Chord as EntityTarget<Chord>, dataSource.createEntityManager());
-    }
+    constructor(private entityManager: EntityManager) {}
 
     async createChord(
         createChordDto: CreateChordDto,
         user: User,
     ): Promise<Chord> {
         const { name, description, notes } = createChordDto;
-        const chord = this.create({
+        const chord = this.entityManager.create(Chord, {
             name,
             description,
             notes,
             user,
         });
 
-        await this.save(chord);
+        await this.entityManager.save(chord);
         return chord;
     }
 
     async getChordById(id: string, user: User): Promise<Chord> {
-        const found = this.findOne({
+        const found = this.entityManager.findOne(Chord, {
             where: {
                 id,
                 user,
