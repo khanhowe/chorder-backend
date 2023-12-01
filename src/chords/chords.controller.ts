@@ -1,4 +1,12 @@
-import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Logger,
+    Param,
+    Post,
+    UseGuards,
+} from '@nestjs/common';
 import { Chord } from './chord.entity';
 import { ChordsService } from './chords.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,5 +26,10 @@ export class ChordsController {
     ): Promise<Chord> {
         this.logger.log(`Creating new chord`);
         return this.chordsService.createChord(createChordDto, user);
+    }
+
+    @Get('/:id')
+    getChordById(@Param('id') id: string, user: User): Promise<Chord> {
+        return this.chordsService.getChordById(id, user);
     }
 }

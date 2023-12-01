@@ -7,7 +7,12 @@ import { User } from 'src/auth/user.entity';
 @Injectable()
 export class ChordsService {
     constructor(private chordRepository: ChordsRepository) {}
+
     createChord(createChordDto: CreateChordDto, user: User): Promise<Chord> {
         return this.chordRepository.createChord(createChordDto, user);
+    }
+
+    getChordById(id: string, user: User) {
+        return this.chordRepository.getChordById(id, user);
     }
 }

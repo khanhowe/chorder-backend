@@ -28,6 +28,7 @@ export class ChordsRepository {
     }
 
     async getChordById(id: string, user: User): Promise<Chord> {
+        this.logger.log(`Getting chord by id: "${id}"`);
         const found = await this.entityManager.findOne(Chord, {
             where: {
                 id,
