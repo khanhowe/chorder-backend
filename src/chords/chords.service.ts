@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChordsRepository } from './chords.repository';
 import { Chord } from './chord.entity';
+import { CreateChordDto } from './dto/create-chord.dto';
 
 @Injectable()
 export class ChordsService {
@@ -9,7 +10,7 @@ export class ChordsService {
         @InjectRepository(ChordsRepository)
         private chordRepository: ChordsRepository,
     ) {}
-    createChord(): Promise<Chord> {
-        return this.chordRepository.createChord();
+    createChord(createChordDto: CreateChordDto): Promise<Chord> {
+        return this.chordRepository.createChord(createChordDto);
     }
 }

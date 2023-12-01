@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, EntityTarget, Repository } from 'typeorm';
 import { Chord } from './chord.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { CreateChordDto } from './dto/create-chord.dto';
 
 @Injectable()
 export class ChordsRepository extends Repository<Chord> {
@@ -11,11 +12,12 @@ export class ChordsRepository extends Repository<Chord> {
         super(Chord as EntityTarget<Chord>, dataSource.createEntityManager());
     }
 
-    async createChord(): Promise<Chord> {
+    async createChord(createChordDto: CreateChordDto): Promise<Chord> {
+        const { name, description, notes } = createChordDto;
         const chord = this.create({
-            name: 'CM',
-            description: 'root chord',
-            notes: 'C4:E4:G4',
+            name,
+            description,
+            notes,
         });
 
         await this.save(chord);

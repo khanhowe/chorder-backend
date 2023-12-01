@@ -1,4 +1,4 @@
-import { Chord } from 'src/chords/chord.entity';
+import { Chord } from '../chords/chord.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 /* eslint-disable indent */

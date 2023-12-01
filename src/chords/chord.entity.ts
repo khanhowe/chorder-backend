@@ -7,7 +7,7 @@ import {
     ManyToOne,
 } from 'typeorm';
 import { Progression } from '../progressions/progression.entity';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @Entity()
 export class Chord {
