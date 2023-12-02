@@ -42,4 +42,14 @@ export class ChordsRepository {
 
         return found;
     }
+
+    async deleteChordById(id: string, user: User): Promise<void> {
+        this.logger.log(`Deleteing chord with id: "${id}"`);
+
+        const result = await this.entityManager.delete(Chord, { id, user });
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`Task with ID "${id}" not found`);
+        }
+    }
 }

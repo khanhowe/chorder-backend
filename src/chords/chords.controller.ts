@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Logger,
     Param,
@@ -35,5 +36,10 @@ export class ChordsController {
         @GetUser() user: User,
     ): Promise<Chord> {
         return this.chordsService.getChordById(id, user);
+    }
+
+    @Delete('/:id')
+    deleteChord(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+        return this.chordsService.deleteChordById(id, user);
     }
 }

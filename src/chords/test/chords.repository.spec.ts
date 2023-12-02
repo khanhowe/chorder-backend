@@ -86,4 +86,24 @@ describe('ChordsRepository', () => {
             ).rejects.toThrow(NotFoundException);
         });
     });
+
+    describe('deleteChordById()', () => {
+        it('Should successfully delete a chord given an id', async () => {
+            const { id: existingId } = await seedChord(queryRunner.manager, {
+                user,
+            });
+
+            await chordsRepository.deleteChordById(existingId, user);
+
+            await expect(
+                chordsRepository.getChordById(existingId, user),
+            ).rejects.toThrow(NotFoundException);
+        });
+
+        it('Should throw an error if passed a non-existant id', async () => {
+            await expect(
+                chordsRepository.deleteChordById(v4(), user),
+            ).rejects.toThrow(NotFoundException);
+        });
+    });
 });

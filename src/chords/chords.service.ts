@@ -12,7 +12,11 @@ export class ChordsService {
         return this.chordRepository.createChord(createChordDto, user);
     }
 
-    getChordById(id: string, user: User) {
+    getChordById(id: string, user: User): Promise<Chord> {
         return this.chordRepository.getChordById(id, user);
+    }
+
+    deleteChordById(id: string, user: User): Promise<void> {
+        return this.chordRepository.deleteChordById(id, user);
     }
 }
