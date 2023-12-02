@@ -14,7 +14,7 @@ export class Progression {
     @ManyToOne(() => Chord)
     chords: Chord[];
 
-    @ManyToOne(() => User, (user) => user.progressions, { eager: false })
+    @ManyToOne(() => User, (user) => user.progressions)
     @Exclude({ toPlainOnly: true })
     user: User;
 }

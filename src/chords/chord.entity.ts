@@ -28,7 +28,7 @@ export class Chord {
     @JoinTable({ name: 'progression_chords' })
     progressions: Progression[];
 
-    @ManyToOne(() => User, (user) => user.chords, { eager: false })
+    @ManyToOne(() => User, (user) => user.chords)
     @Exclude({ toPlainOnly: true })
     user: User;
 }

@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../auth/user.entity';
+import { Song } from '../songs/song.entity';
+import { Progression } from '../progressions/progression.entity';
+import { Chord } from '../chords/chord.entity';
 
 enum Stage {
     TEST = 'TEST',
@@ -21,7 +25,7 @@ enum Stage {
                     username: configService.get<string>(`${stage}_DB_USER`),
                     password: configService.get<string>(`${stage}_DB_PASSWORD`),
                     database: configService.get<string>(`${stage}_DB_NAME`),
-                    autoLoadEntities: true,
+                    entities: [User, Song, Progression, Chord],
                     synchronize: stage === Stage.TEST || stage === Stage.DEV,
                 };
             },

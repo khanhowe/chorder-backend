@@ -13,16 +13,16 @@ import { Exclude } from 'class-transformer';
 @Entity()
 export class Song {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column()
     title: string;
 
     @ManyToMany(() => Progression)
     @JoinTable({ name: 'song_progressions' })
-    progressions: Progression[]; // Songs can have multiple chord progressions
+    progressions: Progression[];
 
-    @ManyToOne(() => User, (user) => user.songs, { eager: false })
+    @ManyToOne(() => User, (user) => user.songs)
     @Exclude({ toPlainOnly: true })
     user: User;
 }

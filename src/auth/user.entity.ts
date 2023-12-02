@@ -17,14 +17,12 @@ export class User {
     @Exclude({ toPlainOnly: true })
     password: string;
 
-    @OneToMany(() => Chord, (chord) => chord.user, { eager: false })
+    @OneToMany(() => Chord, (chord) => chord.user)
     chords: Chord[];
 
-    @OneToMany(() => Progression, (progression) => progression.user, {
-        eager: false,
-    })
+    @OneToMany(() => Progression, (progression) => progression.user)
     progressions: Progression[];
 
-    @OneToMany(() => Song, (song) => song.user, { eager: false })
+    @OneToMany(() => Song, (song) => song.user)
     songs: Song[];
 }
