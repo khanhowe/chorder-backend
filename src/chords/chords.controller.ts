@@ -30,6 +30,14 @@ export class ChordsController {
         return this.chordsService.createChord(createChordDto, user);
     }
 
+    @Post('/bulk')
+    createMany(
+        @Body() createChordsDto: CreateChordDto[],
+        @GetUser() user: User,
+    ): Promise<Chord[]> {
+        return this.chordsService.createMany(createChordsDto, user);
+    }
+
     @Get('/:id')
     getChordById(
         @Param('id') id: string,

@@ -67,6 +67,59 @@ describe('ChordsRepository', () => {
         });
     });
 
+    describe('createManyChords()', () => {
+        it('Should successfully create three chords and save them to the database', async () => {
+            const createChordsDto: CreateChordDto[] = [
+                {
+                    name: 'CM',
+                    description: 'A C major triad',
+                    notes: 'C4:E4:G4',
+                },
+                {
+                    name: 'Am',
+                    description: 'An A minor triad',
+                    notes: 'A4:C4:E4',
+                },
+                {
+                    name: 'FM',
+                    description: 'An F major triad',
+                    notes: 'F4:A4:C4',
+                },
+            ];
+            const savedChords = await chordsRepository.createManyChords(
+                createChordsDto,
+                user,
+            );
+            expect(savedChords[0]).toMatchObject(createChordsDto[0]);
+            expect(savedChords[1]).toMatchObject(createChordsDto[1]);
+            expect(savedChords[2]).toMatchObject(createChordsDto[2]);
+        });
+
+        it('Should throw an error because one of the chords is invalid', async () => {
+            const invalidDto = [
+                {
+                    name: 'CM',
+                    description: 'A C major triad',
+                    notes: 'C4:E4:G4',
+                },
+                {
+                    name: 'Am',
+                    description: 'An A minor triad',
+                },
+                {
+                    name: 'FM',
+                    description: 'An F major triad',
+                    notes: 'F4:A4:C4',
+                },
+            ];
+
+            await expect(
+                // @ts-expect-error: Passing an invalid dto for error testing.
+                chordsRepository.createManyChords(invalidDto, user),
+            ).rejects.toThrow();
+        });
+    });
+
     describe('getChordById()', () => {
         it('Should successfully get a pre-existing chord from the database', async () => {
             const existingChord = await seedChord(queryRunner.manager, {

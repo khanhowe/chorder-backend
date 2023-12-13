@@ -12,6 +12,13 @@ export class ChordsService {
         return this.chordRepository.createChord(createChordDto, user);
     }
 
+    createMany(
+        createChordsDto: CreateChordDto[],
+        user: User,
+    ): Promise<Chord[]> {
+        return this.chordRepository.createManyChords(createChordsDto, user);
+    }
+
     getChordById(id: string, user: User): Promise<Chord> {
         return this.chordRepository.getChordById(id, user);
     }

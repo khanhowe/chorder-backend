@@ -27,6 +27,20 @@ export class ChordsRepository {
         return chord;
     }
 
+    async createManyChords(
+        createChordsDto: CreateChordDto[],
+        user: User,
+    ): Promise<Chord[]> {
+        const chords: Chord[] = [];
+
+        for (const createChordDto of createChordsDto) {
+            const chord = await this.createChord(createChordDto, user);
+            chords.push(chord);
+        }
+
+        return chords;
+    }
+
     async getChordById(id: string, user: User): Promise<Chord> {
         this.logger.log(`Getting chord by id: "${id}"`);
         const found = await this.entityManager.findOne(Chord, {
